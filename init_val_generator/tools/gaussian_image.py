@@ -5,6 +5,38 @@ from ..util import plot_data, print_gaussian_param
 
 
 class GaussianImage:
+    """
+    Class for generating synthetic images with Gaussian components.
+
+    Parameters
+    ----------
+    width : int
+        Width of the image.
+    height : int
+        Height of the image.
+    n : int, optional
+        Number of Gaussian components. If not provided, a random value between 1 and 5 will be used.
+    noise : bool, optional
+        Flag to add random noise to the generated image. Default is True.
+    random_seed : int, optional
+        Seed for random number generation.
+    plot_mode : {'none', 'all', 'result-only'}, optional
+        Plotting mode. 'none' for no plots, 'all' for all plots, 'result-only' for result data plot.
+
+    Attributes
+    ----------
+    model_components : list
+        List of Gaussian model parameters for each component.
+    data : numpy.ndarray
+        Generated image data.
+
+    Examples
+    --------
+    >>> gaussian_image = GaussianImage(width=256, height=256, noise=True, random_seed=8, plot_mode='all')
+    >>> print(gaussian_image.model_components)
+    >>> print(gaussian_image.data)
+    """
+
     def __init__(
         self, width, height, n=None, noise=True, random_seed=None, plot_mode="none"
     ):
@@ -28,12 +60,23 @@ class GaussianImage:
                 self.__plot_data("Original Data")
 
     def __generate_random_parameters(self):
+        """
+        Generate random Gaussian model parameters for each component.
+        """
         self.model_components = []
         for i in range(self.__n):
             self.model_components.append(self.__get_random_parameters())
         print_gaussian_param(self.model_components)
 
     def __get_random_parameters(self):
+        """
+        Generate random parameters for a single Gaussian component.
+
+        Returns
+        -------
+        list
+            List of random parameters for a Gaussian component.
+        """
         amp = np.random.uniform(0.4, 1) * np.random.choice([1, 1, -1])
         center_x = np.random.uniform(self.__width * 0.25, self.__width * 0.75)
         center_y = np.random.uniform(self.__height * 0.25, self.__height * 0.75)
@@ -43,6 +86,9 @@ class GaussianImage:
         return [amp, center_x, center_y, x_sigma, y_sigma, pa]
 
     def __generate_gaussian_components(self):
+        """
+        Generate the image data based on the random Gaussian model parameters.
+        """
         self.data = np.zeros(self.__width * self.__height)
         for i in range(self.__n):
             self.data += self.__get_gaussian_component(
@@ -53,6 +99,23 @@ class GaussianImage:
         self.__data_y = np.repeat(self.__y, self.__width)
 
     def __get_gaussian_component(self, x, y, params):
+        """
+        Calculate the values of a Gaussian component for given parameters.
+
+        Parameters
+        ----------
+        x : numpy.ndarray
+            x-coordinate values.
+        y : numpy.ndarray
+            y-coordinate values.
+        params : list
+            Parameters of the Gaussian component.
+
+        Returns
+        -------
+        numpy.ndarray
+            Calculated values of the Gaussian component.
+        """
         SQ_FWHM_TO_SIGMA = 1 / 8 / math.log(2)
         DEG_TO_RAD = math.pi / 180.0
 
@@ -92,9 +155,20 @@ class GaussianImage:
         return np.array(data)
 
     def __add_noise(self):
+        """
+        Add random noise to the generated image.
+        """
         noise_std = 0.1
         noise = np.random.normal(0.0, noise_std, self.__width * self.__height)
         self.data += noise
 
     def __plot_data(self, title):
+        """
+        Plot the image data.
+
+        Parameters
+        ----------
+        title : str
+            Title of the plot.
+        """
         plot_data(self.data, self.__width, self.__height, title)
