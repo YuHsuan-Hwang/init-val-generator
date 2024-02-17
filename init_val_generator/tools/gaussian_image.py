@@ -1,4 +1,6 @@
+import typing
 import numpy as np
+import numpy.typing as npt
 import math
 
 from ..util import plot_data, print_gaussian_param
@@ -38,8 +40,14 @@ class GaussianImage:
     """
 
     def __init__(
-        self, width, height, n=None, noise=True, random_seed=None, plot_mode="none"
-    ):
+        self,
+        width: int,
+        height: int,
+        n: int | None = None,
+        noise: bool = True,
+        random_seed: int | None = None,
+        plot_mode: str = "none",
+    ) -> None:
         self.__width = width
         self.__height = height
 
@@ -59,7 +67,7 @@ class GaussianImage:
             if plot_mode != "none":
                 self.__plot_data("Original Data")
 
-    def __generate_random_parameters(self):
+    def __generate_random_parameters(self) -> None:
         """
         Generate random Gaussian model parameters for each component.
         """
@@ -68,7 +76,7 @@ class GaussianImage:
             self.model_components.append(self.__get_random_parameters())
         print_gaussian_param(self.model_components)
 
-    def __get_random_parameters(self):
+    def __get_random_parameters(self) -> list[float]:
         """
         Generate random parameters for a single Gaussian component.
 
@@ -85,7 +93,7 @@ class GaussianImage:
         pa = np.random.uniform(0, 360)
         return [amp, center_x, center_y, x_sigma, y_sigma, pa]
 
-    def __generate_gaussian_components(self):
+    def __generate_gaussian_components(self) -> None:
         """
         Generate the image data based on the random Gaussian model parameters.
         """
@@ -98,7 +106,12 @@ class GaussianImage:
         self.__data_x = np.tile(self.__x, self.__height)
         self.__data_y = np.repeat(self.__y, self.__width)
 
-    def __get_gaussian_component(self, x, y, params):
+    def __get_gaussian_component(
+        self,
+        x: npt.NDArray[np.signedinteger[typing.Any]],
+        y: npt.NDArray[np.signedinteger[typing.Any]],
+        params: list[float],
+    ) -> npt.NDArray[np.float64]:
         """
         Calculate the values of a Gaussian component for given parameters.
 
@@ -154,7 +167,7 @@ class GaussianImage:
 
         return np.array(data)
 
-    def __add_noise(self):
+    def __add_noise(self) -> None:
         """
         Add random noise to the generated image.
         """
@@ -162,7 +175,7 @@ class GaussianImage:
         noise = np.random.normal(0.0, noise_std, self.__width * self.__height)
         self.data += noise
 
-    def __plot_data(self, title):
+    def __plot_data(self, title: str) -> None:
         """
         Plot the image data.
 

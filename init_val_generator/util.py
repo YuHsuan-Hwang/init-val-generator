@@ -1,8 +1,9 @@
 import numpy as np
+import numpy.typing as npt
 import matplotlib.pyplot as plt
 
 
-def print_gaussian_param(gaussian_param):
+def print_gaussian_param(gaussian_param: list[list[float]]) -> None:
     """
     Print the parameters of Gaussian models.
 
@@ -26,7 +27,9 @@ def print_gaussian_param(gaussian_param):
         )
 
 
-def plot_data(data, width, height, title):
+def plot_data(
+    data: npt.NDArray[np.float64], width: int, height: int, title: str
+) -> None:
     """
     Plot 2D data.
 
@@ -52,4 +55,6 @@ def plot_data(data, width, height, title):
     )
     plt.colorbar()
     plt.title(title)
-    plt.show()
+
+    # type hint bug will be fixed in matplotlib 3.8.1
+    plt.show()  # type: ignore

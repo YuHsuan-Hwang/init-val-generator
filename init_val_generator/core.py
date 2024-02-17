@@ -1,2 +1,2 @@
-def guess():
+def guess() -> None:
     print("guess")
