@@ -103,9 +103,6 @@ class GaussianImage:
                 self.__x, self.__y, self.model_components[i]
             )
 
-        self.__data_x = np.tile(self.__x, self.__height)
-        self.__data_y = np.repeat(self.__y, self.__width)
-
     def __get_gaussian_component(
         self,
         x: npt.NDArray[np.signedinteger[typing.Any]],
