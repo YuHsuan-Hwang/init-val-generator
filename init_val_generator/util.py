@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
 
 
 def print_gaussian_param(gaussian_param: list[list[float]]) -> None:
@@ -55,6 +56,51 @@ def plot_data(
     )
     plt.colorbar()
     plt.title(title)
+
+    # type hint bug will be fixed in matplotlib 3.8.1
+    plt.show()  # type: ignore
+
+
+def plot_comparison(
+    data: npt.NDArray[np.float64],
+    width: int,
+    height: int,
+    models: list[list[float]],
+    estimates: list[list[float]],
+) -> None:
+    fig, ax = plt.subplots()
+    plt.imshow(
+        np.resize(data, (height, width)),
+        origin="lower",
+        interpolation="nearest",
+    )
+    plt.colorbar()
+
+    for estimate in estimates:
+        ellipse = Ellipse(
+            (estimate[1], estimate[2]),
+            estimate[3],
+            estimate[4],
+            angle=estimate[5] + 90,
+            edgecolor="white",
+            facecolor="none",
+            linestyle="--",
+        )
+        plt.gca().add_patch(ellipse)
+
+    for model in models:
+        model_ellipse = Ellipse(
+            (model[1], model[2]),
+            model[3],
+            model[4],
+            angle=model[5] + 90,
+            edgecolor="red",
+            facecolor="none",
+            linestyle="--",
+        )
+        plt.gca().add_patch(model_ellipse)
+
+    ax.legend(handles=[ellipse, model_ellipse], labels=["Guess", "Model"])
 
     # type hint bug will be fixed in matplotlib 3.8.1
     plt.show()  # type: ignore
