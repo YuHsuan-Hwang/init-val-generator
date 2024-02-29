@@ -3,6 +3,7 @@ import numpy as np
 import numpy.typing as npt
 
 from .util import plot_data
+from .clustering import k_means_plus_plus
 
 
 def guess(
@@ -36,10 +37,15 @@ def guess(
                 data_selected_plot[data_y[i]][data_x[i]] = data[i]
             plot_data(data_selected_plot, width, height, "Selected Data")
 
-    if n == 1:
+    if n is None:
+        raise Exception("Unknow Gaussian component number is not supported.")
+    elif n == 1:
         estimates = [method_of_moments(data, data_x, data_y)]
+    elif n < 11:
+        print(k_means_plus_plus(data, data_x, data_y, n))
+        estimates = [[0, 0, 0, 0, 0, 0]]
     else:
-        raise Exception("Multiple Gaussian or unknow Gaussian number is not supported.")
+        raise Exception("Invalid Gaussian component number.")
 
     return estimates
 
