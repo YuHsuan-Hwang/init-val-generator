@@ -4,7 +4,6 @@ Generating initial values for 2D Gaussian fitting.
 
 To automatically format the code:
 ```
-pip install black
 black .
 ```
 
@@ -16,4 +15,9 @@ mypy -p init_val_generator --strict
 To build and test the package locally:
 ```
 pip install -e .
+```
+
+To run the unit tests:
+```
+pytest
 ```

@@ -19,6 +19,7 @@ def k_means_plus_plus(
     def getWeightedDist(
         centroid_x: np.float64, centroid_y: np.float64
     ) -> npt.NDArray[np.float64]:
+        # type hint undefined in np.sqrt
         dist: npt.NDArray[np.float64] = np.sqrt(
             np.square(data_x - centroid_x) + np.square(data_y - centroid_y)
         )
