@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from init_val_generator.clustering import k_means_plus_plus
+from init_val_generator.clustering import k_means, k_means_plus_plus
 
 
 @pytest.mark.parametrize(
@@ -24,3 +24,16 @@ def test_k_means_plus_plus(peak_pos, peak_val):
     for i, peak_index in enumerate(peak_pos):
         assert centroids_x[i] == peak_index[0]
         assert centroids_y[i] == peak_index[1]
+
+
+def test_k_means():
+    data_x = np.array([0, 1, 2, 3])
+    data_y = np.array([0, 1, 2, 3])
+    data = np.array([1, 1, 2, 2])
+    centroid_x = np.array([0, 1])
+    centroid_y = np.array([0, 1])
+
+    data_cluster_index = k_means(data, data_x, data_y, centroid_x, centroid_y)
+
+    # Check if the second centroid is moved
+    np.testing.assert_array_equal(data_cluster_index, np.array([0, 0, 1, 1]))
