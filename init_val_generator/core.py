@@ -3,7 +3,7 @@ import numpy as np
 import numpy.typing as npt
 
 from .util import plot_data
-from .clustering import k_means_plus_plus
+from .clustering import k_means, k_means_plus_plus
 
 
 def guess(
@@ -42,8 +42,20 @@ def guess(
     elif n == 1:
         estimates = [method_of_moments(data, data_x, data_y)]
     elif n < 11:
-        print(k_means_plus_plus(data, data_x, data_y, n))
-        estimates = [[0, 0, 0, 0, 0, 0]]
+        init_centroid_x, init_centroid_y = k_means_plus_plus(data, data_x, data_y, n)
+        data_cluster_index = k_means(
+            data, data_x, data_y, init_centroid_x, init_centroid_y
+        )
+
+        estimates = []
+        for i in range(n):
+            cluster_indexes = np.where(data_cluster_index == i)[0]
+            data_cluster = data[cluster_indexes]
+            data_x_cluster = data_x[cluster_indexes]
+            data_y_cluster = data_y[cluster_indexes]
+            estimates.append(
+                method_of_moments(data_cluster, data_x_cluster, data_y_cluster)
+            )
     else:
         raise Exception("Invalid Gaussian component number.")
 

@@ -36,3 +36,52 @@ def k_means_plus_plus(
         init_centroid_y[i] = data_y[newIndex]
 
     return init_centroid_x, init_centroid_y
+
+
+def k_means(
+    data: npt.NDArray[np.float64],
+    data_x: npt.NDArray[np.float64],
+    data_y: npt.NDArray[np.float64],
+    centroid_x: npt.NDArray[np.float64],
+    centroid_y: npt.NDArray[np.float64],
+) -> npt.NDArray[np.float64]:
+
+    MAX_ITER = 10
+    n = len(centroid_x)
+    for iter in range(MAX_ITER):
+
+        new_centroid_x = np.zeros(n)
+        new_centroid_y = np.zeros(n)
+        new_centroid_sum = np.zeros(n)
+        data_cluster_index = np.full((data.shape), -1)
+
+        for i in range(len(data)):
+            dist = np.abs(data[i]) * np.sqrt(
+                (np.square(data_x[i] - centroid_x) + np.square(data_y[i] - centroid_y))
+            )
+            cluster_index = np.argmin(dist)
+            data_cluster_index[i] = cluster_index
+            new_centroid_x[cluster_index] += np.abs(data[i]) * data_x[i]
+            new_centroid_y[cluster_index] += np.abs(data[i]) * data_y[i]
+            new_centroid_sum[cluster_index] += np.abs(data[i])
+
+        new_centroid_x /= new_centroid_sum
+        new_centroid_y /= new_centroid_sum
+
+        isCoverged = True
+        for i in range(n):
+            if (
+                new_centroid_x[i] - centroid_x[i] >= 1
+                or new_centroid_y[i] - centroid_y[i] >= 1
+            ):
+                isCoverged = False
+                break
+
+        if isCoverged:
+            print("k-means clustering converged: {} iterations".format(iter))
+            break
+        else:
+            centroid_x = new_centroid_x
+            centroid_y = new_centroid_y
+
+    return data_cluster_index
