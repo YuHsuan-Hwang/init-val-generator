@@ -21,21 +21,9 @@ def guess(
     data_y = np.repeat(y, width)
 
     if data_selection == "3-sigma":
-        std = np.std(data)
-        indices = np.where(np.logical_or(data > 3 * std, data < -3 * std))[0]
-        data = data[indices]
-        data_x = data_x[indices]
-        data_y = data_y[indices]
-
-        print("std of the image: {}".format(std))
-        print("selected data within +/- {}".format(3 * std))
-        print("selected {} / {}".format(len(data), width * height))
-
-        if plot_mode == "all":
-            data_selected_plot = np.full((height, width), np.nan)
-            for i in range(len(data)):
-                data_selected_plot[data_y[i]][data_x[i]] = data[i]
-            plot_data(data_selected_plot, width, height, "Selected Data")
+        data, data_x, data_y = filter_3_sigma(
+            data, width, height, data_x, data_y, plot_mode
+        )
 
     if n is None:
         raise Exception("Unknow Gaussian component number is not supported.")
@@ -60,6 +48,34 @@ def guess(
         raise Exception("Invalid Gaussian component number.")
 
     return estimates
+
+
+def filter_3_sigma(
+    data: npt.NDArray[np.float64],
+    width: int,
+    height: int,
+    data_x: npt.NDArray[np.float64],
+    data_y: npt.NDArray[np.float64],
+    plot_mode: str,
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+
+    std = np.std(data)
+    indices = np.where(np.logical_or(data > 3 * std, data < -3 * std))[0]
+    data = data[indices]
+    data_x = data_x[indices]
+    data_y = data_y[indices]
+
+    print("std of the image: {}".format(std))
+    print("selected data within +/- {}".format(3 * std))
+    print("selected {} / {}".format(len(data), width * height))
+
+    if plot_mode == "all":
+        data_selected_plot = np.full((height, width), np.nan)
+        for i in range(len(data)):
+            data_selected_plot[data_y[i]][data_x[i]] = data[i]
+        plot_data(data_selected_plot, width, height, "Selected Data")
+
+    return data, data_x, data_y
 
 
 def method_of_moments(
