@@ -56,7 +56,7 @@ def filter_3_sigma(
     height: int,
     data_x: npt.NDArray[np.float64],
     data_y: npt.NDArray[np.float64],
-    plot_mode: str,
+    plot_mode: str = "none",
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
 
     std = np.std(data)
@@ -66,7 +66,7 @@ def filter_3_sigma(
     data_y = data_y[indices]
 
     print("std of the image: {}".format(std))
-    print("selected data within +/- {}".format(3 * std))
+    print("excluded data within +/- {}".format(3 * std))
     print("selected {} / {}".format(len(data), width * height))
 
     if plot_mode == "all":
