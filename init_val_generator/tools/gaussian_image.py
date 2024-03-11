@@ -12,24 +12,24 @@ class GaussianImage:
 
     Parameters
     ----------
-    width : int
+    width
         Width of the image.
-    height : int
+    height
         Height of the image.
-    n : int, optional
+    n
         Number of Gaussian components. If not provided, a random value between 1 and 5 will be used.
-    noise : bool, optional
+    noise
         Flag to add random noise to the generated image. Default is True.
-    random_seed : int, optional
+    random_seed
         Seed for random number generation.
-    plot_mode : {'none', 'all', 'result-only'}, optional
+    plot_mode
         Plotting mode. 'none' for no plots, 'all' for all plots, 'result-only' for result data plot.
 
     Attributes
     ----------
-    model_components : list
+    model_components
         List of Gaussian model parameters for each component.
-    data : numpy.ndarray
+    data
         Generated image data.
 
     Examples
@@ -114,11 +114,11 @@ class GaussianImage:
 
         Parameters
         ----------
-        x : numpy.ndarray
+        x
             x-coordinate values.
-        y : numpy.ndarray
+        y
             y-coordinate values.
-        params : list
+        params
             Parameters of the Gaussian component.
 
         Returns
@@ -178,7 +178,7 @@ class GaussianImage:
 
         Parameters
         ----------
-        title : str
+        title
             Title of the plot.
         """
         plot_data(self.data, self.__width, self.__height, title)

@@ -10,7 +10,7 @@ def print_gaussian_param(gaussian_param: list[list[float]]) -> None:
 
     Parameters
     ----------
-    gaussian_param : list
+    gaussian_param
         List of Gaussian parameters, where each element is a list representing
         (amplitude, center_x, center_y, fwhm_x, fwhm_y, position_angle).
 
@@ -36,13 +36,13 @@ def plot_data(
 
     Parameters
     ----------
-    data : numpy.ndarray
+    data
         1D array containing the data to be plotted.
-    width : int
+    width
         Width of the image.
-    height : int
+    height
         Height of the image.
-    title : str
+    title
         Title of the plot.
 
     Returns

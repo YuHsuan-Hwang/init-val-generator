@@ -21,3 +21,9 @@ To run the unit tests:
 ```
 pytest
 ```
+
+To build documentation html files:
+```
+cd docs
+make html
+```
