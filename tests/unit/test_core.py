@@ -1,6 +1,6 @@
 import numpy as np
 
-from init_val_generator.core import filter_3_sigma, method_of_moments
+from init_val_generator.core import filter_3_sigma
 
 
 def test_filter_3_sigma():
