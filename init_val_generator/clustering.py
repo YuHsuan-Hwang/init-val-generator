@@ -8,6 +8,25 @@ def k_means_plus_plus(
     data_y: npt.NDArray[np.float64],
     n: int,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    """
+    Perform K-means++ initialization to choose initial centroids for K-means clustering.
+
+    Parameters
+    ----------
+    data
+        The input data array.
+    data_x
+        X coordinates of data points.
+    data_y
+        Y coordinates of data points.
+    n
+        Number of centroids to initialize.
+
+    Returns
+    -------
+    tuple
+        X coordinates of the initialized centroids, Y coordinates of the initialized centroids.
+    """
 
     init_centroid_x = np.empty(n)
     init_centroid_y = np.empty(n)
@@ -45,6 +64,27 @@ def k_means(
     centroid_x: npt.NDArray[np.float64],
     centroid_y: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.float64]:
+    """
+    Perform K-means clustering on the input data.
+
+    Parameters
+    ----------
+    data
+        The input data array.
+    data_x
+        X coordinates of data points.
+    data_y
+        Y coordinates of data points.
+    centroid_x
+        X coordinates of initial centroids.
+    centroid_y
+        Y coordinates of initial centroids.
+
+    Returns
+    -------
+    numpy.ndarray
+        Cluster indices for each data point.
+    """
 
     MAX_ITER = 10
     n = len(centroid_x)

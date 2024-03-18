@@ -58,6 +58,29 @@ def filter_3_sigma(
     data_y: npt.NDArray[np.float64],
     plot_mode: str = "none",
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    """
+    Filter out data points within 3 standard deviations.
+
+    Parameters
+    ----------
+    data
+        The input data array.
+    width
+        Width of the data array.
+    height
+        Height of the data array.
+    data_x
+        X coordinates of data points.
+    data_y
+        Y coordinates of data points.
+    plot_mode
+        The mode for plotting. Options: "none", "all".
+
+    Returns
+    -------
+    tuple
+        Filtered data array, filtered X coordinates of data points, filtered Y coordinates of data points.
+    """
 
     std = np.std(data)
     indices = np.where(np.logical_or(data > 3 * std, data < -3 * std))[0]
@@ -83,6 +106,23 @@ def method_of_moments(
     data_x: npt.NDArray[np.float64],
     data_y: npt.NDArray[np.float64],
 ) -> list[float]:
+    """
+    Estimate parameters of 2D single Gaussian distribution using the method of moments.
+
+    Parameters
+    ----------
+    data
+        The input data array.
+    data_x
+        X coordinates of data points.
+    data_y
+        Y coordinates of data points.
+
+    Returns
+    -------
+    list[float]
+        Estimated parameters: amplitude, center x, center y, FWHM x, FWHM y, and position angle.
+    """
 
     m0 = data.sum()
     mx = np.dot(data_x, data) / m0
