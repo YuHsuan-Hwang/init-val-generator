@@ -63,7 +63,7 @@ def k_means(
     data_y: npt.NDArray[np.float64],
     centroid_x: npt.NDArray[np.float64],
     centroid_y: npt.NDArray[np.float64],
-) -> npt.NDArray[np.float64]:
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """
     Perform K-means clustering on the input data.
 
@@ -80,10 +80,8 @@ def k_means(
     centroid_y
         Y coordinates of initial centroids.
 
-    Returns
-    -------
-    numpy.ndarray
-        Cluster indices for each data point.
+    tuple
+        X coordinates of the initialized centroids, Y coordinates of the initialized centroids, cluster indices for each data point.
     """
 
     MAX_ITER = 10
@@ -124,4 +122,61 @@ def k_means(
             centroid_x = new_centroid_x
             centroid_y = new_centroid_y
 
-    return data_cluster_index
+    return data_cluster_index, centroid_x, centroid_y
+
+
+def mean_distance(
+    data_x: npt.NDArray[np.float64],
+    data_y: npt.NDArray[np.float64],
+    x: float,
+    y: float,
+) -> float:
+
+    distances = np.sqrt((data_x - x) ** 2 + (data_y - y) ** 2)
+    mean_dist: float = np.mean(distances)
+    return mean_dist
+
+
+def get_silhouette_score(
+    data: npt.NDArray[np.float64],
+    data_x: npt.NDArray[np.float64],
+    data_y: npt.NDArray[np.float64],
+    centroid_x: npt.NDArray[np.float64],
+    centroid_y: npt.NDArray[np.float64],
+    data_cluster_index: npt.NDArray[np.float64],
+) -> float:
+
+    score = 0.0
+    num = len(data)
+
+    for i in range(num):
+        x = data_x[i]
+        y = data_y[i]
+        cluster_index = data_cluster_index[i]
+
+        data_x_cluster = data_x[data_cluster_index == cluster_index]
+        data_y_cluster = data_y[data_cluster_index == cluster_index]
+
+        distances = [
+            np.sqrt((x - cx) ** 2 + (y - cy) ** 2)
+            for cx, cy in zip(centroid_x, centroid_y)
+        ]
+        sorted_indices = np.argsort(distances)
+        second_nearest_cluster_index = sorted_indices[1]
+
+        data_x_second_nearest_cluster = data_x[
+            data_cluster_index == second_nearest_cluster_index
+        ]
+        data_y_second_nearest_cluster = data_y[
+            data_cluster_index == second_nearest_cluster_index
+        ]
+
+        a = mean_distance(data_x_cluster, data_y_cluster, x, y)
+        b = mean_distance(
+            data_x_second_nearest_cluster, data_y_second_nearest_cluster, x, y
+        )
+
+        score += (b - a) / max(a, b)
+
+    score /= num
+    return score

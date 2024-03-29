@@ -10,7 +10,7 @@ height = 256
 # multiple gaussian
 image = GaussianImage(width, height, random_seed=0, plot_mode="none")
 
-estimates = guess(image.data, width, height, 5, plot_mode="none")
+estimates = guess(image.data, width, height, None, plot_mode="all")
 
-# print_gaussian_param(estimates)
-# plot_comparison(image.data, width, height, image.model_components, estimates)
+print_gaussian_param(estimates)
+plot_comparison(image.data, width, height, image.model_components, estimates)

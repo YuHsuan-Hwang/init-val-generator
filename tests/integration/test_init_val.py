@@ -42,3 +42,21 @@ def test_multiple_gaussian():
         ),
         atol=1e-4,
     )
+
+
+def test_multiple_gaussian_unknown_num():
+    width = 256
+    height = 256
+    image = GaussianImage(width, height, random_seed=0)
+    estimates = guess(image.data, width, height, None)
+    np.testing.assert_allclose(
+        estimates,
+        np.array(
+            [
+                [1.9538, 154.1164, 128.4123, 30.3442, 19.6114, 100.8985],
+                [1.2938, 74.8998, 66.8425, 17.4741, 16.8425, 131.4475],
+                [1.3327, 107.9609, 124.4628, 28.7147, 15.1682, 90.9042],
+            ]
+        ),
+        atol=1e-4,
+    )

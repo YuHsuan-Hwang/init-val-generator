@@ -33,7 +33,11 @@ def test_k_means():
     centroid_x = np.array([0, 1])
     centroid_y = np.array([0, 1])
 
-    data_cluster_index = k_means(data, data_x, data_y, centroid_x, centroid_y)
+    data_cluster_index, centroid_x, centroid_y = k_means(
+        data, data_x, data_y, centroid_x, centroid_y
+    )
 
     # Check if the second centroid is moved
     np.testing.assert_array_equal(data_cluster_index, np.array([0, 0, 1, 1]))
+    np.testing.assert_array_equal(centroid_x, np.array([0, 2.2]))
+    np.testing.assert_array_equal(centroid_y, np.array([0, 2.2]))

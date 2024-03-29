@@ -1,9 +1,10 @@
 import math
+import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
 from .util import plot_data
-from .clustering import k_means, k_means_plus_plus
+from .clustering import get_silhouette_score, k_means, k_means_plus_plus
 
 
 def guess(
@@ -26,12 +27,45 @@ def guess(
         )
 
     if n is None:
-        raise Exception("Unknow Gaussian component number is not supported.")
-    elif n == 1:
+        MAX_COMPONENT_NUM = 10
+        scores = []
+        for i in range(MAX_COMPONENT_NUM):
+            input_num = i + 1
+            print("clustering with component number {}".format(str(input_num)))
+
+            init_centroid_x, init_centroid_y = k_means_plus_plus(
+                data, data_x, data_y, input_num
+            )
+            data_cluster_index, centroid_x, centroid_y = k_means(
+                data, data_x, data_y, init_centroid_x, init_centroid_y
+            )
+
+            if i != 0:
+                score = get_silhouette_score(
+                    data, data_x, data_y, centroid_x, centroid_y, data_cluster_index
+                )
+                scores.append(score)
+
+            if i > 2:
+                if scores[i - 1] < scores[i - 2] and scores[i - 2] < scores[i - 3]:
+                    break
+
+        if plot_mode == "all":
+            print(scores)
+            plt.figure()
+            plt.plot(list(range(2, len(scores) + 2)), scores)
+
+        n = 1
+        if np.max(scores) >= 0.6:
+            max_index = np.argmax(scores)
+            n = int(max_index) + 2
+        print("best component num is {}".format(str(n)))
+
+    if n == 1:
         estimates = [method_of_moments(data, data_x, data_y)]
     elif n < 11:
         init_centroid_x, init_centroid_y = k_means_plus_plus(data, data_x, data_y, n)
-        data_cluster_index = k_means(
+        data_cluster_index, centroid_x, centroid_y = k_means(
             data, data_x, data_y, init_centroid_x, init_centroid_y
         )
 
