@@ -100,7 +100,15 @@ def plot_comparison(
         )
         plt.gca().add_patch(model_ellipse)
 
-    ax.legend(handles=[ellipse, model_ellipse], labels=["Guess", "Model"])
+    handles = []
+    labels = []
+    if len(estimates):
+        handles.append(ellipse)
+        labels.append("Guess")
+    if len(models):
+        handles.append(model_ellipse)
+        labels.append("Model")
+    ax.legend(handles, labels)
 
     # type hint bug will be fixed in matplotlib 3.8.1
     plt.show()  # type: ignore
