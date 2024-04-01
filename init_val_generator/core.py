@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
-from .util import plot_data
+from .data_selection import SelectionMethod, filter_data
 from .clustering import get_silhouette_score, k_means, k_means_plus_plus
 
 
@@ -12,7 +12,7 @@ def guess(
     width: int,
     height: int,
     n: int | None = 1,
-    data_selection: str = "3-sigma",
+    data_selection: SelectionMethod | None = None,
     plot_mode: str = "none",
 ) -> list[list[float]]:
 
@@ -21,9 +21,9 @@ def guess(
     data_x = np.tile(x, height)
     data_y = np.repeat(y, width)
 
-    if data_selection == "3-sigma":
-        data, data_x, data_y = filter_3_sigma(
-            data, width, height, data_x, data_y, plot_mode
+    if data_selection is not None:
+        data, data_x, data_y = filter_data(
+            data_selection, data, width, height, data_x, data_y, plot_mode
         )
 
     if n is None:
@@ -82,57 +82,6 @@ def guess(
         raise Exception("Invalid Gaussian component number.")
 
     return estimates
-
-
-def filter_3_sigma(
-    data: npt.NDArray[np.float64],
-    width: int,
-    height: int,
-    data_x: npt.NDArray[np.float64],
-    data_y: npt.NDArray[np.float64],
-    plot_mode: str = "none",
-) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
-    """
-    Filter out data points within 3 standard deviations.
-
-    Parameters
-    ----------
-    data
-        The input data array.
-    width
-        Width of the data array.
-    height
-        Height of the data array.
-    data_x
-        X coordinates of data points.
-    data_y
-        Y coordinates of data points.
-    plot_mode
-        The mode for plotting. Options: "none", "all".
-
-    Returns
-    -------
-    tuple
-        Filtered data array, filtered X coordinates of data points, filtered Y coordinates of data points.
-    """
-
-    std = np.std(data)
-    indices = np.where(np.logical_or(data > 3 * std, data < -3 * std))[0]
-    data = data[indices]
-    data_x = data_x[indices]
-    data_y = data_y[indices]
-
-    print("std of the image: {}".format(std))
-    print("excluded data within +/- {}".format(3 * std))
-    print("selected {} / {}".format(len(data), width * height))
-
-    if plot_mode == "all":
-        data_selected_plot = np.full((height, width), np.nan)
-        for i in range(len(data)):
-            data_selected_plot[data_y[i]][data_x[i]] = data[i]
-        plot_data(data_selected_plot, width, height, "Selected Data")
-
-    return data, data_x, data_y
 
 
 def method_of_moments(

@@ -16,7 +16,7 @@ def test_single_gaussian_with_noise():
     width = 256
     height = 256
     image = GaussianImage(width, height, 1, random_seed=8)
-    estimates = guess(image.data, width, height, 1)
+    estimates = guess(image.data, width, height, 1, "3-sigma")
     np.testing.assert_allclose(
         estimates,
         np.array([[1.3421, 94.3963, 112.3251, 27.8443, 14.7146, 41.8023]]),
@@ -28,7 +28,7 @@ def test_multiple_gaussian():
     width = 256
     height = 256
     image = GaussianImage(width, height, random_seed=0)
-    estimates = guess(image.data, width, height, 5)
+    estimates = guess(image.data, width, height, 5, "3-sigma")
     np.testing.assert_allclose(
         estimates,
         np.array(
@@ -48,7 +48,7 @@ def test_multiple_gaussian_unknown_num():
     width = 256
     height = 256
     image = GaussianImage(width, height, random_seed=0)
-    estimates = guess(image.data, width, height, None)
+    estimates = guess(image.data, width, height, None, "3-sigma")
     np.testing.assert_allclose(
         estimates,
         np.array(
