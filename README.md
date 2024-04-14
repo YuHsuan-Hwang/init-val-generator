@@ -12,14 +12,19 @@ To apply type checks:
 mypy -p init_val_generator --strict
 ```
 
-To build and test the package locally:
+To run the unit tests:
+```
+pytest
+```
+
+Development build:
 ```
 pip install -e .
 ```
 
-To run the unit tests:
+Production build:
 ```
-pytest
+pip install .
 ```
 
 To build documentation html files:

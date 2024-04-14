@@ -8,6 +8,7 @@ Generating initial values for 2D Gaussian fitting.
     :caption: Contents:
 
     core
+    data_selection
     clustering
     tools
     util
