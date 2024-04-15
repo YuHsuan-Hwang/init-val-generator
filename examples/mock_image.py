@@ -6,7 +6,8 @@ from init_val_generator.util import print_gaussian_param, plot_comparison
 width = 256
 height = 256
 # single gaussian
-image = GaussianImage(width, height, random_seed=8, n=1, plot_mode="none")
+# image = GaussianImage(width, height, n=1, random_seed=8, plot_mode="none")
+image = GaussianImage(width, height, [[1, 128, 128, 40, 20, 35]], plot_mode="none")
 # multiple gaussian
 # image = GaussianImage(width, height, random_seed=0, plot_mode="none")
 

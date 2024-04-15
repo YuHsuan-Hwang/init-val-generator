@@ -16,12 +16,16 @@ class GaussianImage:
         Width of the image.
     height
         Height of the image.
+    params
+        List of Gaussian parameters, where each element is a list representing
+        (amplitude, center_x, center_y, fwhm_x, fwhm_y, position_angle).
+        If not provided, random parameters will be used.
     n
         Number of Gaussian components. If not provided, a random value between 1 and 5 will be used.
-    noise
-        Flag to add random noise to the generated image. Default is True.
     random_seed
         Seed for random number generation.
+    noise
+        Flag to add random noise to the generated image. Default is True.
     plot_mode
         Plotting mode. 'none' for no plots, 'all' for all plots, 'result-only' for result data plot.
 
@@ -43,9 +47,10 @@ class GaussianImage:
         self,
         width: int,
         height: int,
+        params: list[list[float]] | None = None,
         n: int | None = None,
-        noise: bool = True,
         random_seed: int | None = None,
+        noise: bool = True,
         plot_mode: str = "none",
     ) -> None:
         self.__width = width
@@ -54,9 +59,14 @@ class GaussianImage:
         self.__x = np.arange(width)
         self.__y = np.arange(height)
 
-        np.random.seed(random_seed)
-        self.__n = np.random.randint(5) + 1 if n is None else n
-        self.__generate_random_parameters()
+        if params is not None:
+            self.__n = len(params)
+            self.model_components = params
+            print_gaussian_param(self.model_components)
+        else:
+            np.random.seed(random_seed)
+            self.__n = np.random.randint(5) + 1 if n is None else n
+            self.__generate_random_parameters()
 
         self.__generate_gaussian_components()
         if plot_mode == "all":
