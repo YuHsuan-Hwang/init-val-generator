@@ -32,3 +32,13 @@ To build documentation html files:
 cd docs
 make html
 ```
+
+To store conda env:
+```
+conda env export --no-builds | grep -v "prefix" > environment.yml
+```
+
+To restore conda env:
+```
+conda env create -f environment.yml
+```
