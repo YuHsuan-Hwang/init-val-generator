@@ -6,7 +6,7 @@ from init_val_generator.tools.gaussian_image import GaussianImage
 def test_single_gaussian():
     width = 256
     height = 256
-    image = GaussianImage(width, height, n=1, random_seed=8, noise=False)
+    image = GaussianImage(width, height, n=1, random_seed=8, noise=None)
     estimates = guess(image.data, width, height, 1, "all")
     estimates[0][5] += 180
     np.testing.assert_allclose(estimates, image.model_components)

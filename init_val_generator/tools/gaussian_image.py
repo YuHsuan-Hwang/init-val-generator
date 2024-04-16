@@ -25,7 +25,7 @@ class GaussianImage:
     random_seed
         Seed for random number generation.
     noise
-        Flag to add random noise to the generated image. Default is True.
+        The standard deviation of the noise distribution. Default is 0.1.
     plot_mode
         Plotting mode. 'none' for no plots, 'all' for all plots, 'result-only' for result data plot.
 
@@ -50,7 +50,7 @@ class GaussianImage:
         params: list[list[float]] | None = None,
         n: int | None = None,
         random_seed: int | None = None,
-        noise: bool = True,
+        noise: float | None = 0.1,
         plot_mode: str = "none",
     ) -> None:
         self.__width = width
@@ -59,21 +59,24 @@ class GaussianImage:
         self.__x = np.arange(width)
         self.__y = np.arange(height)
 
+        np.random.seed(random_seed)
+
         if params is not None:
             self.__n = len(params)
             self.model_components = params
-            print_gaussian_param(self.model_components)
         else:
-            np.random.seed(random_seed)
             self.__n = np.random.randint(5) + 1 if n is None else n
             self.__generate_random_parameters()
+
+        if plot_mode != "none":
+            print_gaussian_param(self.model_components)
 
         self.__generate_gaussian_components()
         if plot_mode == "all":
             self.__plot_data("Model Data")
 
         if noise:
-            self.__add_noise()
+            self.__add_noise(noise)
             if plot_mode != "none":
                 self.__plot_data("Original Data")
 
@@ -84,7 +87,6 @@ class GaussianImage:
         self.model_components = []
         for i in range(self.__n):
             self.model_components.append(self.__get_random_parameters())
-        print_gaussian_param(self.model_components)
 
     def __get_random_parameters(self) -> list[float]:
         """
@@ -174,13 +176,16 @@ class GaussianImage:
 
         return np.array(data)
 
-    def __add_noise(self) -> None:
+    def __add_noise(self, noise_std: float) -> None:
         """
         Add random noise to the generated image.
+
+        Parameters
+        ----------
+        noise_std
+            The standard deviation of the noise distribution.
         """
-        noise_std = 0.1
-        noise = np.random.normal(0.0, noise_std, self.__width * self.__height)
-        self.data += noise
+        self.data += np.random.normal(0.0, noise_std, self.__width * self.__height)
 
     def __plot_data(self, title: str) -> None:
         """
