@@ -46,17 +46,16 @@ def filter_data(
     """
 
     if method == SelectionMethod.THREE_SIGMA:
-        indices = filter_3_sigma(data)
+        indices = filter_3_sigma(data, plot_mode)
     else:
-        indices = filter_3_mad(data)
+        indices = filter_3_mad(data, plot_mode)
 
     data = data[indices]
     data_x = data_x[indices]
     data_y = data_y[indices]
 
-    print("selected {} / {}".format(len(data), width * height))
-
     if plot_mode == "all":
+        print("selected {} / {}".format(len(data), width * height))
         data_selected_plot = np.full((height, width), np.nan)
         for i in range(len(data)):
             data_selected_plot[data_y[i]][data_x[i]] = data[i]
@@ -66,7 +65,7 @@ def filter_data(
 
 
 def filter_3_sigma(
-    data: npt.NDArray[np.float64],
+    data: npt.NDArray[np.float64], plot_mode: str = "none"
 ) -> npt.NDArray[np.intc]:
     """
     Filter out data points within 3 standard deviations.
@@ -75,6 +74,8 @@ def filter_3_sigma(
     ----------
     data
         The input data array.
+    plot_mode
+        The mode for plotting. Options: "none", "all".
 
     Returns
     -------
@@ -84,15 +85,15 @@ def filter_3_sigma(
 
     std = np.std(data)
     indices = np.where(np.logical_or(data > 3 * std, data < -3 * std))[0]
-
-    print("std of the image: {}".format(std))
-    print("excluded data within +/- {}".format(3 * std))
+    if plot_mode == "all":
+        print("std of the image: {}".format(std))
+        print("excluded data within +/- {}".format(3 * std))
 
     return indices
 
 
 def filter_3_mad(
-    data: npt.NDArray[np.float64],
+    data: npt.NDArray[np.float64], plot_mode: str = "none"
 ) -> npt.NDArray[np.intc]:
     """
     Filter out data points within 3 median absolute deviation (MAD).
@@ -101,6 +102,8 @@ def filter_3_mad(
     ----------
     data
         The input data array.
+    plot_mode
+        The mode for plotting. Options: "none", "all".
 
     Returns
     -------
@@ -111,7 +114,8 @@ def filter_3_mad(
     mad = 1.4826 * np.median(np.abs(data - np.median(data)))
     indices = np.where(np.logical_or(data > 3 * mad, data < -3 * mad))[0]
 
-    print("mad of the image: {}".format(mad))
-    print("excluded data within +/- {}".format(3 * mad))
+    if plot_mode == "all":
+        print("mad of the image: {}".format(mad))
+        print("excluded data within +/- {}".format(3 * mad))
 
     return indices
