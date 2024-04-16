@@ -59,7 +59,8 @@ class GaussianImage:
         self.__x = np.arange(width)
         self.__y = np.arange(height)
 
-        np.random.seed(random_seed)
+        if random_seed is not None:
+            np.random.seed(random_seed)
 
         if params is not None:
             self.__n = len(params)
