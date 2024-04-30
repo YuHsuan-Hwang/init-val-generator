@@ -7,7 +7,9 @@ from .util import plot_data
 
 class SelectionMethod(StrEnum):
     THREE_SIGMA = "3-sigma"
-    MAD = "3-mad"
+    MAD = "mad"
+    TWO_MAD = "2-mad"
+    THREE_MAD = "3-mad"
 
 
 def filter_data(
@@ -47,8 +49,12 @@ def filter_data(
 
     if method == SelectionMethod.THREE_SIGMA:
         indices = filter_3_sigma(data, plot_mode)
+    elif method == SelectionMethod.MAD:
+        indices = filter_mad(data, 1, plot_mode)
+    elif method == SelectionMethod.TWO_MAD:
+        indices = filter_mad(data, 2, plot_mode)
     else:
-        indices = filter_3_mad(data, plot_mode)
+        indices = filter_mad(data, 3, plot_mode)
 
     data = data[indices]
     data_x = data_x[indices]
@@ -92,16 +98,18 @@ def filter_3_sigma(
     return indices
 
 
-def filter_3_mad(
-    data: npt.NDArray[np.float64], plot_mode: str = "none"
+def filter_mad(
+    data: npt.NDArray[np.float64], multiplier: float = 3, plot_mode: str = "none"
 ) -> npt.NDArray[np.intc]:
     """
-    Filter out data points within 3 median absolute deviation (MAD).
+    Filter out data points within median absolute deviation (MAD).
 
     Parameters
     ----------
     data
         The input data array.
+    multiplier
+        Multiplier used to scale the MAD threshold.
     plot_mode
         The mode for plotting. Options: "none", "all".
 
@@ -112,7 +120,9 @@ def filter_3_mad(
     """
 
     mad = 1.4826 * np.median(np.abs(data - np.median(data)))
-    indices = np.where(np.logical_or(data > 3 * mad, data < -3 * mad))[0]
+    indices = np.where(
+        np.logical_or(data > multiplier * mad, data < -multiplier * mad)
+    )[0]
 
     if plot_mode == "all":
         print("mad of the image: {}".format(mad))
