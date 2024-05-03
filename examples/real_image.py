@@ -1,7 +1,7 @@
 import sys
 from astropy.io import fits
 import numpy as np
-from init_val_generator.core import guess
+from init_val_generator import guess
 from init_val_generator.util import print_gaussian_param, plot_comparison
 
 

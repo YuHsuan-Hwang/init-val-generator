@@ -7,8 +7,11 @@ Generating initial values for 2D Gaussian fitting.
     :maxdepth: 4
     :caption: Contents:
 
-    core
+    init_val_generator
+    method_of_moments
     data_selection
     clustering
     tools
     util
+
+.. autofunction:: init_val_generator.guess

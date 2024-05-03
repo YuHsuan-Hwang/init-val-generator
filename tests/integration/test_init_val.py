@@ -1,5 +1,5 @@
 import numpy as np
-from init_val_generator.core import guess
+from init_val_generator import guess, InitValGenerator
 from init_val_generator.tools.gaussian_image import GaussianImage
 
 
@@ -7,7 +7,7 @@ def test_single_gaussian():
     width = 256
     height = 256
     image = GaussianImage(width, height, n=1, random_seed=8, noise=None)
-    estimates = guess(image.data, width, height, 1, "all")
+    estimates = guess(image.data, width, height, 1)
     estimates[0][5] += 180
     np.testing.assert_allclose(estimates, image.model_components)
 
@@ -16,7 +16,10 @@ def test_single_gaussian_with_noise():
     width = 256
     height = 256
     image = GaussianImage(width, height, n=1, random_seed=8)
-    estimates = guess(image.data, width, height, 1, "3-sigma")
+
+    guesser = InitValGenerator("3-sigma")
+    estimates = guesser.estimate(image.data, width, height, 1)
+
     np.testing.assert_allclose(
         estimates,
         np.array([[1.3421, 94.3963, 112.3251, 27.8443, 14.7146, 41.8023]]),
@@ -28,7 +31,10 @@ def test_multiple_gaussian():
     width = 256
     height = 256
     image = GaussianImage(width, height, random_seed=0)
-    estimates = guess(image.data, width, height, 5, "3-sigma")
+
+    guesser = InitValGenerator("3-sigma")
+    estimates = guesser.estimate(image.data, width, height, 5)
+
     np.testing.assert_allclose(
         estimates,
         np.array(
@@ -48,8 +54,10 @@ def test_multiple_gaussian_unknown_num():
     width = 256
     height = 256
     image = GaussianImage(width, height, random_seed=0)
-    estimates = guess(image.data, width, height, None, "3-sigma")
-    print(estimates)
+
+    guesser = InitValGenerator("3-sigma")
+    estimates = guesser.estimate(image.data, width, height, None)
+
     np.testing.assert_allclose(
         estimates,
         np.array(
