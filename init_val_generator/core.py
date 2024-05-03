@@ -123,6 +123,6 @@ def method_of_moments(
     fwhm_x_estimate = sigma_x_estimate * SIGMA_TO_FWHM
     fwhm_y_estimate = sigma_y_estimate * SIGMA_TO_FWHM
 
-    theta_estimate = np.degrees(np.arctan((myy - mxx + tmp) / 2 / mxy)) + 90
+    theta_estimate = np.degrees(-0.5 * np.arctan2(2 * mxy, myy - mxx))
 
     return [amp_estimate, mx, my, fwhm_x_estimate, fwhm_y_estimate, theta_estimate]
