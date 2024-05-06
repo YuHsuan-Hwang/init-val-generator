@@ -8,16 +8,14 @@ from .clustering import get_silhouette_score, k_means, k_means_plus_plus
 
 
 class InitValGenerator:
-    def __init__(self, data_selection: SelectionMethod | None = None):
+    def __init__(
+        self, data_selection: SelectionMethod | None = None, plot_mode: str = "none"
+    ):
         self.data_selection = data_selection
+        self.plot_mode = plot_mode
 
     def estimate(
-        self,
-        data: npt.NDArray[np.float64],
-        width: int,
-        height: int,
-        n: int | None = 1,
-        plot_mode: str = "none",
+        self, data: npt.NDArray[np.float64], width: int, height: int, n: int | None = 1
     ) -> list[list[float]]:
 
         x = np.arange(width)
@@ -27,7 +25,7 @@ class InitValGenerator:
 
         if self.data_selection is not None:
             data, data_x, data_y = filter_data(
-                self.data_selection, data, width, height, data_x, data_y, plot_mode
+                self.data_selection, data, width, height, data_x, data_y, self.plot_mode
             )
 
         if n is None:
@@ -54,7 +52,7 @@ class InitValGenerator:
                     if scores[i - 1] < scores[i - 2] and scores[i - 2] < scores[i - 3]:
                         break
 
-            if plot_mode == "all":
+            if self.plot_mode == "all":
                 print(scores)
                 plt.figure()
                 plt.plot(list(range(2, len(scores) + 2)), scores)

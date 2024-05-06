@@ -13,7 +13,7 @@ image = GaussianImage(
 # multiple gaussian
 # image = GaussianImage(width, height, random_seed=0, plot_mode="none")
 
-estimates = guess(image.data, width, height, 1, plot_mode="all")
+estimates = guess(image.data, width, height, 1)
 
 print_gaussian_param(estimates)
 plot_comparison(image.data, width, height, image.model_components, estimates)

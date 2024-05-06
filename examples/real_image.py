@@ -12,6 +12,6 @@ image_data = fits.getdata(sys.argv[1])
 width = image_data.shape[0]
 height = image_data.shape[1]
 image_data = np.reshape(image_data, width * height)
-estimates = guess(image_data, width, height, None, plot_mode="all")
+estimates = guess(image_data, width, height, None)
 print_gaussian_param(estimates)
 plot_comparison(image_data, width, height, [], estimates)

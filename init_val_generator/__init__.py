@@ -5,11 +5,7 @@ from .init_val_generator import InitValGenerator
 
 
 def guess(
-    data: npt.NDArray[np.float64],
-    width: int,
-    height: int,
-    n: int | None = 1,
-    plot_mode: str = "none",
+    data: npt.NDArray[np.float64], width: int, height: int, n: int | None = 1
 ) -> list[list[float]]:
     guesser = InitValGenerator()
-    return guesser.estimate(data, width, height, n, plot_mode)
+    return guesser.estimate(data, width, height, n)
