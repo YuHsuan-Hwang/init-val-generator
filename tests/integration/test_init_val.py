@@ -1,5 +1,5 @@
 import numpy as np
-from init_val_generator import guess, InitValGenerator
+from init_val_generator import InitValGenerator
 from init_val_generator.tools.gaussian_image import GaussianImage
 
 

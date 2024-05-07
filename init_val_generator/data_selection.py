@@ -2,6 +2,8 @@ from enum import StrEnum
 import numpy as np
 import numpy.typing as npt
 
+from .method_of_moments import method_of_moments
+
 from .util import plot_data
 
 
@@ -10,6 +12,9 @@ class SelectionMethod(StrEnum):
     MAD = "mad"
     TWO_MAD = "2-mad"
     THREE_MAD = "3-mad"
+    FWHM_ESTIMATE = "fwhm-estimate"
+    TWO_FWHM_ESTIMATE = "2-fwhm-estimate"
+    THREE_FWHM_ESTIMATE = "3-fwhm-estimate"
 
 
 def filter_data(
@@ -53,8 +58,14 @@ def filter_data(
         indices = filter_mad(data, 1, plot_mode)
     elif method == SelectionMethod.TWO_MAD:
         indices = filter_mad(data, 2, plot_mode)
-    else:
+    elif method == SelectionMethod.THREE_MAD:
         indices = filter_mad(data, 3, plot_mode)
+    elif method == SelectionMethod.FWHM_ESTIMATE:
+        indices = filter_fwhm(data, data_x, data_y, 1, plot_mode)
+    elif method == SelectionMethod.TWO_FWHM_ESTIMATE:
+        indices = filter_fwhm(data, data_x, data_y, 2, plot_mode)
+    else:
+        indices = filter_fwhm(data, data_x, data_y, 3, plot_mode)
 
     data = data[indices]
     data_x = data_x[indices]
@@ -127,5 +138,50 @@ def filter_mad(
     if plot_mode == "all":
         print("mad of the image: {}".format(mad))
         print("excluded data within +/- {}".format(3 * mad))
+
+    return indices
+
+
+def filter_fwhm(
+    data: npt.NDArray[np.float64],
+    data_x: npt.NDArray[np.float64],
+    data_y: npt.NDArray[np.float64],
+    multiplier: float = 3,
+    plot_mode: str = "none",
+) -> npt.NDArray[np.intc]:
+    """
+    Apply method of moments to the data and filter out data points out of the estimated FWHM.
+
+    Parameters
+    ----------
+    data
+        The input data array.
+    data_x
+        X coordinates of data points.
+    data_y
+        Y coordinates of data points.
+    multiplier
+        Multiplier used to scale the selected area.
+    plot_mode
+        The mode for plotting. Options: "none", "all".
+
+    Returns
+    -------
+    tuple
+        Indices of not excluded data.
+    """
+
+    amp, center_x, center_y, fwhm_x, fwhm_y, pa = method_of_moments(
+        data, data_x, data_y
+    )
+    size = np.max([fwhm_x, fwhm_y])
+    indices = np.where(
+        np.sqrt((data_x - center_x) ** 2 + (data_y - center_y) ** 2)
+        <= size / 2 * multiplier
+    )[0]
+
+    if plot_mode == "all":
+        print("fwhm of the image: {}, {}".format(fwhm_x, fwhm_y))
+        print("excluded data out of radius {}".format(size / 2 * multiplier))
 
     return indices
