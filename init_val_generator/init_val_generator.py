@@ -6,6 +6,8 @@ from .data_selection import SelectionMethod, filter_data
 from .method_of_moments import method_of_moments
 from .clustering import get_silhouette_score, k_means, k_means_plus_plus
 
+MAX_COMPONENT_NUM = 10
+
 
 class InitValGenerator:
     def __init__(
@@ -29,7 +31,6 @@ class InitValGenerator:
             )
 
         if n is None:
-            MAX_COMPONENT_NUM = 10
             scores = []
             for i in range(MAX_COMPONENT_NUM):
                 input_num = i + 1
@@ -65,7 +66,7 @@ class InitValGenerator:
 
         if n == 1:
             estimates = [method_of_moments(data, data_x, data_y)]
-        elif n < 11:
+        elif n <= MAX_COMPONENT_NUM:
             init_centroid_x, init_centroid_y = k_means_plus_plus(
                 data, data_x, data_y, n
             )
