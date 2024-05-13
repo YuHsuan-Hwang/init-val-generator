@@ -89,6 +89,12 @@ class InitValGenerator:
                         data_y,
                         self.plot_mode,
                     )
+                else:
+                    clustering_data, clustering_data_x, clustering_data_y = (
+                        data,
+                        data_x,
+                        data_y,
+                    )
 
                 init_centroid_x, init_centroid_y = k_means_plus_plus(
                     clustering_data, clustering_data_x, clustering_data_y, input_num
