@@ -35,7 +35,7 @@ def test_multiple_gaussian():
     height = 256
     image = GaussianImage(width, height, random_seed=0)
 
-    guesser = InitValGenerator("3-sigma")
+    guesser = InitValGenerator("3-sigma", "3-sigma")
     estimates = guesser.estimate(image.data, width, height, 5)
 
     np.testing.assert_allclose(
@@ -58,7 +58,7 @@ def test_multiple_gaussian_unknown_num():
     height = 256
     image = GaussianImage(width, height, random_seed=0)
 
-    guesser = InitValGenerator("3-sigma")
+    guesser = InitValGenerator("3-sigma", "3-sigma")
     estimates = guesser.estimate(image.data, width, height, None)
 
     np.testing.assert_allclose(
