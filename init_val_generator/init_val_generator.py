@@ -10,12 +10,37 @@ MAX_COMPONENT_NUM = 10
 
 
 class InitValGenerator:
+    """
+    Generates initial values for Gaussian image fitting.
+
+    Attributes
+    ----------
+    data_selection
+        Method for selecting data for parameter estimation.
+    clustering_data_selection
+        Method for selecting data for clustering.
+    plot_mode
+        Plotting mode. 'none' for no plots, 'all' for all plots.
+    """
+
     def __init__(
         self,
         data_selection: SelectionMethod | None = None,
         clustering_data_selection: SelectionMethod | None = None,
         plot_mode: str = "none",
     ):
+        """
+        Initialize the InitValGenerator.
+
+        Parameters
+        ----------
+        data_selection
+            Method for selecting data for parameter estimation.
+        clustering_data_selection
+            Method for selecting data for clustering.
+        plot_mode
+            Plotting mode. 'none' for no plots, 'all' for all plots.
+        """
         self.data_selection = data_selection
         self.clustering_data_selection = clustering_data_selection
         self.plot_mode = plot_mode
@@ -23,6 +48,25 @@ class InitValGenerator:
     def estimate(
         self, data: npt.NDArray[np.float64], width: int, height: int, n: int | None = 1
     ) -> list[list[float]]:
+        """
+        Estimates Gaussian components.
+
+        Parameters
+        ----------
+        data
+            The input data array.
+        width
+            Width of the data array.
+        height
+            Height of the data array.
+        n
+            Number of components. If None, the optimal number is estimated.
+
+        Returns
+        -------
+        list[list[float]]
+            List of estimated parameters for the Gaussian components. The estimated parameters are: amplitude, center x, center y, FWHM x, FWHM y, and position angle.
+        """
 
         x = np.arange(width)
         y = np.arange(height)
