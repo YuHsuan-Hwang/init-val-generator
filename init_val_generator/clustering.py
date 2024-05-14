@@ -116,7 +116,7 @@ def k_means(
                 break
 
         if isCoverged:
-            print("k-means clustering converged: {} iterations".format(iter))
+            # print("k-means clustering converged: {} iterations".format(iter))
             break
         else:
             centroid_x = new_centroid_x
